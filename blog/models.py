@@ -3,6 +3,11 @@ from django.utils import timezone
 from django.conf import settings
 
 
+class PublishedManager(models.Manager):
+    def get_queryset(self):
+        return (super().get_queryset().filter(status=Post.Status.PUBLISHED))
+
+
 class Post(models.Model):
     """ Модель поста """
 
@@ -21,12 +26,12 @@ class Post(models.Model):
                               verbose_name='Статус состояния поста')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog_posts',
                                verbose_name='Автор поста')
+    objects = models.Manager() # Менеджер, применяемы по умолчанию
+    published = PublishedManager() # конкретно-прикладной менеджер
 
     class Meta:
-        # Сортировка постов по дате публикации в порядке убывания
-        ordering = ['-publish']
-        # Индекс
-        indexes = [models.Index(fields=['-publish'])]
+        ordering = ['-publish'] # Сортировка постов по дате публикации в порядке убывания
+        indexes = [models.Index(fields=['-publish'])] # Индекс
         verbose_name = 'Пост'
         verbose_name_plural = 'Посты'
 
