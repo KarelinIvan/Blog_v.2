@@ -18,7 +18,7 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания поста')
     updated = models.DateTimeField(auto_now=True, verbose_name='Дата обновления поста')
     status = models.CharField(max_length=2, choices=Status.choices, default=Status.DRAFT,
-                              verbose_name='Статус состояния поста (Черновик/Опубликован)')
+                              verbose_name='Статус состояния поста')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='blog_posts',
                                verbose_name='Автор поста')
 
