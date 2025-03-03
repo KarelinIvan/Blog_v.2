@@ -1,19 +1,18 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>{% block title %}{% endblock %}</title>
-    <link href="{% static "css/blog.css" %}" rel="stylesheet">
+  <title>{% block title %}{% endblock %}</title>
+  <link href="{% static "css/blog.css" %}" rel="stylesheet">
 </head>
 <body>
-    <div pk="content">
-        {% block content %}
-        {% endblocke %}
-    </div>
-    <div pk="sidebar">
-        <h2>Мой блог</h2>
-        <p>Это мой болг</p>
-    </div>
+  <div pk="content">
+    {% block content %}
+    {% endblock %}
+  </div>
+  <div pk="sidebar">
+    <h2>Мой блог</h2>
+    <p>Это мой блог</p>
+  </div>
 </body>
 </html>
