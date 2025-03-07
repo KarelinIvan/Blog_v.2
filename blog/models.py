@@ -18,7 +18,7 @@ class Post(models.Model):
         PUBLISHED = 'PB', 'Опубликован'
 
     title = models.CharField(max_length=250, verbose_name='Название поста', help_text='Напишите название')
-    slug = models.SlugField(max_length=250)
+    slug = models.SlugField(max_length=250, unique_for_date='publish')
     body = models.TextField(verbose_name='Содержание поста', help_text='Напишите описание')
     publish = models.DateTimeField(default=timezone.now, verbose_name='Дата публикации поста')
     created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания поста')
