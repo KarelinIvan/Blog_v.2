@@ -45,13 +45,13 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
-    name = models.CharField(max_length=100, verbose_name='Автор комментария')
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name='Пост')
+    name = models.CharField(max_length=100, verbose_name='Автор')
     email = models.EmailField(verbose_name='e-mail')
-    body = models.TextField(verbose_name='Введите комментарий')
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    active = models.BooleanField(default=True)
+    body = models.TextField(verbose_name='Комментарии')
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    updated = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
+    active = models.BooleanField(default=True, verbose_name='Статус')
 
     class Meta:
         ordering = ['created']
