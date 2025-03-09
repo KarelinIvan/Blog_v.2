@@ -45,6 +45,7 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
+    """ Модель комментариев """
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name='Пост')
     name = models.CharField(max_length=100, verbose_name='Автор')
     email = models.EmailField(verbose_name='e-mail')
