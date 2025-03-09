@@ -56,6 +56,8 @@ class Comment(models.Model):
     class Meta:
         ordering = ['created']
         indexes = [models.Index(fields=['created'])]
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
 
     def __str__(self):
         return f'Комментарии {self.name} к {self.post}'
