@@ -56,7 +56,7 @@ def post_share(request, post_id):
             subject = (f"{cd['name']} рекомендует тебе прочитать {post.title}")
             message = (f"Прочитай {post.title} в {post_url}\n"
                        f"{cd['name']} комментариях: {cd['comments']}\n")
-            send_mail(subject, message, 'ivan.karelin.1993@mail.ru', [cd['кому']])
+            send_mail(subject, message, 'ivan.karelin.1993@mail.ru', [cd['to']])
     else:
         form = EmailPostForm()
     return render(request, 'blog/post/share.html',
