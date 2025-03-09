@@ -1,4 +1,5 @@
 from django.views.generic import ListView
+from django.core.mail import send_mail
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404
@@ -13,6 +14,7 @@ class PostListView(ListView):
     context_object_name = 'posts'
     paginate_by = 5
     template_name = 'blog/post/list.html'
+
 
 # def post_list(request):
 #     """ Выводит список постов """
@@ -34,12 +36,15 @@ class PostListView(ListView):
 def post_detail(request, year, month, day, post):
     """ Выводит детальную информацию о посте, при его отсутствие выдает ошибку код 404 (Не найдено) """
     post = get_object_or_404(Post, status=Post.Status.PUBLISHED, slug=post, publish__year=year,
-                             publish__month=month, publish__day=day,)
+                             publish__month=month, publish__day=day, )
     return render(request, 'blog/post/detail.html', {'post': post})
+
 
 def post_share(request, post_id):
     """ Извлекает пост по индентификатору id """
     post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
+
+    sent = False
 
     if request.method == 'POST':
         # Форма была передана на обработку
@@ -47,7 +52,17 @@ def post_share(request, post_id):
         if form.is_valid():
             # Поля формы успешно прошли валидацию
             cd = form.cleaned_data
-            # ... отправить электронное письмо
+            post_url = request.build_absolute_uri(post.get_absolute_url())
+            subject = (f"{cd['name']} рекомендует тебе прочитать {post.title}")
+            message = (f"Прочитай {post.title} в {post_url}\n"
+                       f"{cd['name']} комментариях: {cd['comments']}\n")
+            send_mail(subject, message, 'ivan.karelin.1993@mail.ru', [cd['кому']])
     else:
         form = EmailPostForm()
-    return render(request, 'blog/post/share.html', {'post': post, 'form': form})
+    return render(request, 'blog/post/share.html',
+                  {
+                      'post': post,
+                      'form': form,
+                      'sent': sent
+                  }
+                  )
