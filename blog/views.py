@@ -1,10 +1,11 @@
+from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 from django.core.mail import send_mail
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404
 
-from blog.forms import EmailPostForm
+from blog.forms import EmailPostForm, CommentForm
 from blog.models import Post
 
 
@@ -66,3 +67,19 @@ def post_share(request, post_id):
                       'sent': sent
                   }
                   )
+
+
+@require_POST
+def post_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id, status=Post.Status.PUBLISHED)
+    comment = None
+    # Комментарий был отправлен
+    form = CommentForm(request.POST)
+    if form.is_valid():
+        # Создать объект класса Comment, не сохраняя его в базе
+        comment = form.save(commit=False)
+        # Назначить пост комментарию
+        comment.post = post
+        # Сохранить комментарий в базе данных
+        comment.save()
+    return render(request, 'blog/post/comment.html', {'post': post, 'form': form, 'comment': comment})
