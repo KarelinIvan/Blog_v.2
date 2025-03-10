@@ -42,3 +42,23 @@ class Post(models.Model):
     def get_absolute_url(self):
         """ конвертирует логический адрес в физический URL-адрес целевых данных """
         return reverse('blog:post_detail', args=[self.publish.year, self.publish.month, self.publish.day, self.slug, ])
+
+
+class Comment(models.Model):
+    """ Модель комментариев """
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments', verbose_name='Пост')
+    name = models.CharField(max_length=100, verbose_name='Автор')
+    email = models.EmailField(verbose_name='e-mail')
+    body = models.TextField(verbose_name='Комментарии')
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    updated = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
+    active = models.BooleanField(default=True, verbose_name='Статус')
+
+    class Meta:
+        ordering = ['created']
+        indexes = [models.Index(fields=['created'])]
+        verbose_name = 'Комментарий'
+        verbose_name_plural = 'Комментарии'
+
+    def __str__(self):
+        return f'Комментарии {self.name} к {self.post}'
