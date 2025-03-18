@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from django.urls import reverse
+from taggit.managers import TaggableManager
 
 
 class PublishedManager(models.Manager):
@@ -29,6 +30,7 @@ class Post(models.Model):
                                verbose_name='Автор поста')
     objects = models.Manager()  # Менеджер, применяемы по умолчанию
     published = PublishedManager()  # конкретно-прикладной менеджер
+    tags = TaggableManager()
 
     class Meta:
         ordering = ['-publish']  # Сортировка постов по дате публикации в порядке убывания
