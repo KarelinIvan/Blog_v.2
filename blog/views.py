@@ -38,7 +38,11 @@ def post_detail(request, year, month, day, post):
     """ Выводит детальную информацию о посте, при его отсутствие выдает ошибку код 404 (Не найдено) """
     post = get_object_or_404(Post, status=Post.Status.PUBLISHED, slug=post, publish__year=year,
                              publish__month=month, publish__day=day, )
-    return render(request, 'blog/post/detail.html', {'post': post})
+    # Список активных комментариев к посту
+    comments = post.comments.filter(active=True)
+    # Форма для комментариев пользователя
+    form = CommentForm()
+    return render(request, 'blog/post/detail.html', {'post': post, 'comments': comments, 'form': form})
 
 
 def post_share(request, post_id):
