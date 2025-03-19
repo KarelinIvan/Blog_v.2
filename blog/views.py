@@ -7,6 +7,7 @@ from django.shortcuts import render, get_object_or_404
 from blog.forms import EmailPostForm, CommentForm
 from blog.models import Post
 from taggit.models import Tag
+from django.db.models import Count
 
 
 # class PostListView(ListView):
@@ -46,7 +47,12 @@ def post_detail(request, year, month, day, post):
     comments = post.comments.filter(active=True)
     # Форма для комментариев пользователя
     form = CommentForm()
-    return render(request, 'blog/post/detail.html', {'post': post, 'comments': comments, 'form': form})
+    # Список схожих постов
+    post_tags_ids = post.tags.values_list('id', flat=True)
+    similar_posts = Post.published.filter(tags__in=post_tags_ids).exclude(id=post.id)
+    similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-publish')[:4]
+    return render(request, 'blog/post/detail.html',
+                  {'post': post, 'comments': comments, 'form': form, 'similar_posts': similar_posts})
 
 
 def post_share(request, post_id):
