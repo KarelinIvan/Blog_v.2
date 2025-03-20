@@ -13,6 +13,12 @@ class EmailPostForm(forms.Form):
 
 class CommentForm(forms.ModelForm):
     """ Форма комментариев """
+
     class Meta:
         model = Comment
         fields = ('name', 'email', 'body')
+
+
+class SearchForm(forms.Form):
+    """ Форма поиска """
+    query = forms.CharField()
